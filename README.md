@@ -11,17 +11,17 @@ A production-style REST API deployed to AWS using **Infrastructure as Code** and
 ```mermaid
 flowchart TD
     Dev[Developer] -->|git push| GH[GitHub]
-    GH -->|OIDC: short-lived token| GHA[GitHub Actions<br/>test → build → push → deploy]
+    GH -->|OIDC short-lived token| GHA[GitHub Actions test build push deploy]
     GHA -->|push image| ECR[(Amazon ECR)]
-    GHA -->|update service| ECS
+    GHA -->|update service| ECS[ECS Fargate Service]
 
-    User[Internet User] -->|HTTP :80| ALB[Application Load Balancer]
-    ALB -->|:8000, only healthy targets| ECS[ECS Fargate Service]
+    User[Internet User] -->|HTTP port 80| ALB[Application Load Balancer]
+    ALB -->|port 8000 healthy targets only| ECS
     ECS -->|pull image| ECR
-    ECS -->|logs + metrics| CW[CloudWatch]
-    CW -->|alarms| SNS[SNS → Email]
+    ECS -->|logs and metrics| CW[CloudWatch]
+    CW -->|alarms| SNS[SNS Email]
 
-    subgraph VPC[VPC 10.0.0.0/16 · 2 Availability Zones]
+    subgraph VPC[VPC across 2 Availability Zones]
         ALB
         ECS
     end
