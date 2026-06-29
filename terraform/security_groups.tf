@@ -28,7 +28,7 @@ resource "aws_security_group" "alb" {
 # ---- Security group for the ECS Fargate tasks (your containers) ----
 resource "aws_security_group" "ecs_tasks" {
   name        = "${var.project_name}-ecs-tasks-sg"
-  description = "Allow inbound only from the ALB"
+  description = "Allow inbound only from the ALB, egress HTTPS only"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -39,11 +39,12 @@ resource "aws_security_group" "ecs_tasks" {
     security_groups = [aws_security_group.alb.id]
   }
 
+  # Locked-down egress: HTTPS only (needed for ECR pulls + CloudWatch logs)
   egress {
-    description = "Allow all outbound"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "HTTPS outbound only"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
