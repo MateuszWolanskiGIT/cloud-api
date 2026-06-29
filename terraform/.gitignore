@@ -1,0 +1,12 @@
+# Local .terraform directories and provider plugins
+.terraform/
+
+# State files - NEVER commit these
+*.tfstate
+*.tfstate.*
+
+# Variable files that may hold secrets
+*.tfvars
+
+# Crash logs
+crash.log
