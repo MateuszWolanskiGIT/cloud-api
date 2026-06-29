@@ -6,7 +6,7 @@ app = FastAPI(title="Cloud API", version="1.0.0")
 
 @app.get("/")
 def root():
-    return {"message": "Cloud API is running", "docs": "/docs"}
+    return {"message": "Cloud API - deployed via CI/CD pipeline", "docs": "/docs"}
 
 
 @app.get("/health")
